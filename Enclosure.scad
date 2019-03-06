@@ -124,7 +124,7 @@ module enclosureFront(enclosure) {
 
 module enclosureBack(enclosure) {
     height = mapGet(enclosure, "height");
-    width = mapGet(enclosure, "width");
+    depth = mapGet(enclosure, "depth");
     shell = mapGet(enclosure, "shell");
 
     rotate([90, 0, 0]) rotate([0, 180, 0]) translate([0, height/2, depth/2-shell-0.01]) scale([1, 1, shell]) children();
