@@ -1,5 +1,5 @@
 // Lets make the round bits pretty
-$fn=32;
+$fn=64;
 
 // Load the main library
 use <Enclosure.scad>
