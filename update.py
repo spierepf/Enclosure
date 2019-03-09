@@ -38,4 +38,19 @@ r.raise_for_status()
 
 r = requests.get(base_url + "/things/"+str(thing_id)+"/", headers=headers)
 r.raise_for_status()
-print(r.text)
+
+def update_file(filename):
+    print(filename)
+
+for thing_file in thing_files:
+    if not os.path.isfile(thing_file):
+        base_name,extension = os.path.splitext(thing_file)
+        source_file = base_name + ".scad"
+        assert os.path.isfile(source_file)
+        import subprocess
+        subprocess.call(["openscad", source_file, "-o", thing_file])
+        assert os.path.isfile(thing_file)
+        update_file(thing_file)
+        os.remove(thing_file)
+    else:
+        update_file(thing_file)
