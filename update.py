@@ -43,7 +43,17 @@ r.raise_for_status()
 
 import json
 
-def update_file(filename):
+def list_files():
+    r = requests.get(thing_url + "files/", headers=headers)
+    return json.loads(r.text)
+
+def delete_file(filename):
+    for file in list_files():
+        if(file["name"] == filename):
+            requests.delete(thing_url + "files/" + str(file["id"]), headers=headers)
+            r.raise_for_status()
+
+def upload_file(filename):
     r = requests.post(thing_url + "files", json={ "filename" : filename }, headers=headers)
     r.raise_for_status()
 
@@ -63,52 +73,9 @@ def update_file(filename):
     r = requests.post(response["fields"]["success_action_redirect"], headers=headers)
     r.raise_for_status()
 
-# POST / HTTP/1.1
-# Host: thingiverse-production.s3.amazonaws.com
-# Content-Type: multipart/form-data; boundary=---------------------------66289253989742337765937765
-# Content-Length: 12357
-
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="AWSAccessKeyId"
-
-# 0S2CMSXYJEXCGHRR6K82
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="bucket"
-
-# thingiverse-production
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="key"
-
-# uploads/84/37/86/ef/74/SuperCoolThing.stl
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="acl"
-
-# public-read
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="success_action_redirect"
-
-# https://api.thingiverse.com/files/111382/finalize
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="policy"
-
-# eyJleHBpcmF0aW9uIjoiMjAxMi0xMi0yOVQxOTozNDoyN1oiLCJjb25kaXRpb25zIjpbeyJhY2wiOiJwdWJsaWMtcmVhZCJ9LHsiYnVja2V0IjoidGhpbmdpdmVyc2UtcHJvZHVjdGlvbiJ9LFsic3RhcnRzLXdpdGgiLCIka2V5IiwidXBsb2Fkc1wvIl0sWyJzdGFydHMtd2l0aCIsIiRDb250ZW50LVR5cGUiLCIiXSxbInN0YXJ0cy13aXRoIiwiJENvbnRlbnQtRGlzcG9zaXRpb24iLCIiXSx7InN1Y2Nlc3NfYWN0aW9uX3JlZGlyZWN0IjoiaHR0cDpcL1wvd3d3LnRoaW5naXZlcnNlLmNvbVwvdGhpbmdzXC9maW5hbGl6ZSJ9LFsiY29udGVudC1sZW5ndGgtcmFuZ2UiLDEsMjYyMTQ0MDAwXV19
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="signature"
-
-# dyqah6pLNWvjI4AemGsvq/vjVtE=
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="Content-Type"
-
-# application/sla
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="Content-Disposition"
-
-
-# -----------------------------66289253989742337765937765
-# Content-Disposition: form-data; name="file"; filename="SuperCoolThing.stl"
-# Content-Type: application/sla
-# ... A BUNCH OF BINARY DATA ...
-# -----------------------------66289253989742337765937765    
+def update_file(filename):
+    delete_file(filename)
+    upload_file(filename)
 
 # try:
 #     import http.client as http_client
@@ -116,6 +83,7 @@ def update_file(filename):
 #     # Python 2
 #     import httplib as http_client
 # http_client.HTTPConnection.debuglevel = 1
+
 
 for thing_file in thing_files:
     if not os.path.isfile(thing_file):
