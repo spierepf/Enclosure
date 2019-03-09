@@ -20,4 +20,22 @@ if not os.path.isfile('access_token.py'):
     f.close()
 
 execfile( "access_token.py" )
-print(access_token)
+execfile( "thing_config.py" )
+
+import requests
+
+r = requests.post("https://www.thingiverse.com/login/oauth/tokeninfo?access_token="+access_token)
+r.raise_for_status()
+
+base_url = "https://api.thingiverse.com"
+
+headers = { "Authorization": "Bearer "+access_token }
+
+with open('README.md', 'r') as myfile:
+    description=myfile.read()
+r = requests.patch(base_url + "/things/"+str(thing_id)+"/", json={ "description" : description }, headers=headers)
+r.raise_for_status()
+
+r = requests.get(base_url + "/things/"+str(thing_id)+"/", headers=headers)
+r.raise_for_status()
+print(r.text)
