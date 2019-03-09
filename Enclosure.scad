@@ -107,11 +107,17 @@ module enclosureBase(enclosure) {
     }
 }
 
+module shellScale(enclosure) {
+    shell = mapGet(enclosure, "shell");
+
+    scale([1, 1, shell + 0.01]) children();
+}
+
 module enclosureTop(enclosure) {
     height = mapGet(enclosure, "height");
     shell = mapGet(enclosure, "shell");
 
-    translate([0, 0, height-shell-0.01]) scale([1, 1, shell]) children();
+    translate([0, 0, height-shell-0.01]) shellScale(enclosure) children();
 }
 
 module enclosureFront(enclosure) {
@@ -119,15 +125,15 @@ module enclosureFront(enclosure) {
     depth = mapGet(enclosure, "depth");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) translate([0, height/2, depth/2-shell-0.01]) scale([1, 1, shell]) children();
+    rotate([90, 0, 0]) translate([0, height/2, depth/2-shell-0.01]) shellScale(enclosure) children();
 }
 
 module enclosureBack(enclosure) {
     height = mapGet(enclosure, "height");
-    width = mapGet(enclosure, "width");
+    depth = mapGet(enclosure, "depth");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, 180, 0]) translate([0, height/2, depth/2-shell-0.01]) scale([1, 1, shell]) children();
+    rotate([90, 0, 0]) rotate([0, 180, 0]) translate([0, height/2, depth/2-shell-0.01]) shellScale(enclosure) children();
 }
 
 module enclosureRight(enclosure) {
@@ -135,7 +141,7 @@ module enclosureRight(enclosure) {
     width = mapGet(enclosure, "width");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, 90, 0]) translate([0, height/2, width/2-shell-0.01]) scale([1, 1, shell]) children();
+    rotate([90, 0, 0]) rotate([0, 90, 0]) translate([0, height/2, width/2-shell-0.01]) shellScale(enclosure) children();
 }
 
 module enclosureLeft(enclosure) {
@@ -143,5 +149,5 @@ module enclosureLeft(enclosure) {
     width = mapGet(enclosure, "width");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, -90, 0]) translate([0, height/2, width/2-shell-0.01]) scale([1, 1, shell]) children();
+    rotate([90, 0, 0]) rotate([0, -90, 0]) translate([0, height/2, width/2-shell-0.01]) shellScale(enclosure) children();
 }
