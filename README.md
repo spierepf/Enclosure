@@ -3,7 +3,7 @@ OpenSCAD library for generating enclosures.
 
 ``` openscad
 // Lets make the round bits pretty
-$fn=32;
+$fn=64;
 
 // Load the main library
 use <Enclosure.scad>
@@ -16,16 +16,13 @@ myEnclosure = enclosure([80.0, 40.0, 20.0]); // define an enclosure that is 80.0
 difference() {
     // Basic shape for the enclosure cover
     enclosureCover(myEnclosure);
-    
-    // Need a big hole in the top for the on off switch
-    enclosureTop(myEnclosure) cylinder(d=16);
-    
-    // Add three holes in front to mount LEDs
-    enclosureFront(myEnclosure) translate([-10, 0]) cylinder(d=5);
-    enclosureFront(myEnclosure) translate([0, 0]) cylinder(d=5);
-    enclosureFront(myEnclosure) translate([10, 0]) cylinder(d=5);
+
+    // Need some holes in the top for a couple of potentiometers
+    enclosureTop(myEnclosure) translate([-18, 0]) rotate(60) potentiometer();
+
+    enclosureTop(myEnclosure) translate([ 18, 0]) rotate(60) potentiometer();
 }
 
-// Now lets render the snap-on base:
+// Now lets render the snap on base:
 translate([0, 0, -10]) enclosureBase(myEnclosure);
 ```

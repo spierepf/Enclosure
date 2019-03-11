@@ -151,3 +151,8 @@ module enclosureLeft(enclosure) {
 
     rotate([90, 0, 0]) rotate([0, -90, 0]) translate([0, height/2, width/2-shell-0.01]) shellScale(enclosure) children();
 }
+
+module potentiometer() {
+    cylinder(d=7.4);
+    translate([-7.8, 0]) cylinder(d=2.9);
+}
