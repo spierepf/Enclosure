@@ -1,3 +1,4 @@
 config.py
 access_token.py
 thing_config.py
+*.stl

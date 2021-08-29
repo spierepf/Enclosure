@@ -1,4 +1,4 @@
-execfile( "config.py" )
+exec(open("./config.py").read())
 
 import os.path
 if not os.path.isfile('access_token.py'):
@@ -19,8 +19,8 @@ if not os.path.isfile('access_token.py'):
     f.write(url.split("#")[1].replace('=', '="') + '"')
     f.close()
 
-execfile( "access_token.py" )
-execfile( "thing_config.py" )
+exec(open("./access_token.py").read())
+exec(open("./thing_config.py").read())
 
 import requests
 import logging
