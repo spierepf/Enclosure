@@ -1,4 +1,5 @@
 use <_MapStructure.scad>
+use <PCB.scad>
 
 function enclosure(size, shell=2.0, fillet=3.0, gap=0.1, nubWidth=-1, lipDepth=-1, lipHeight=-1) =
     [
@@ -19,7 +20,7 @@ module roundedBox (width, depth, height, fillet) {
             minkowski() {
                 cube([width-fillet*2, depth-fillet*2, height-fillet]);
                 difference() {
-                    sphere(fillet, center=true);
+                    sphere(fillet);
                     translate([0, 0, -fillet])
                     cube(size=fillet * 2, center=true);
                 }
@@ -107,6 +108,38 @@ module enclosureBase(enclosure) {
     }
 }
 
+module baseStandoffs(enclosure, pcb) {
+    pcbWidth = mapGet(pcb, "width");
+    pcbDepth = mapGet(pcb, "depth");
+    pcbElevation = mapGet(pcb, "elevation");
+
+    difference() {
+        union() {
+            translate([-(pcbWidth/2)+(-1.0), -(pcbDepth/2)+(-1.0), 0]) cube([3, 3, pcbElevation]);
+            translate([-(pcbWidth/2)+(-1.0),  (pcbDepth/2)+(-2.0), 0]) cube([3, 3, pcbElevation]);
+            translate([ (pcbWidth/2)+(-2.0),  (pcbDepth/2)+(-2.0), 0]) cube([3, 3, pcbElevation]);
+            translate([ (pcbWidth/2)+(-2.0), -(pcbDepth/2)+(-1.0), 0]) cube([3, 3, pcbElevation]);
+        }
+        pcb(pcb, [0.4, 0.4, 0.001]);
+    }
+}
+
+module coverStandoffs(enclosure, pcb) {
+    pcbWidth = mapGet(pcb, "width");
+    pcbDepth = mapGet(pcb, "depth");
+    pcbElevation = mapGet(pcb, "elevation");
+
+    height = mapGet(enclosure, "height");
+    shell = mapGet(enclosure, "shell");
+
+    union() {
+        translate([-(pcbWidth/2)+(-1.0), -(pcbDepth/2)+(-1.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
+        translate([-(pcbWidth/2)+(-1.0),  (pcbDepth/2)+(-2.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
+        translate([ (pcbWidth/2)+(-2.0),  (pcbDepth/2)+(-2.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
+        translate([ (pcbWidth/2)+(-2.0), -(pcbDepth/2)+(-1.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
+    }
+}
+
 module shellScale(enclosure) {
     shell = mapGet(enclosure, "shell");
 
@@ -117,7 +150,13 @@ module enclosureTop(enclosure) {
     height = mapGet(enclosure, "height");
     shell = mapGet(enclosure, "shell");
 
-    translate([0, 0, height-shell-0.01]) shellScale(enclosure) children();
+    translate([0, 0, height-shell-0.01]) children();
+}
+
+module enclosureBottom(enclosure) {
+    shell = mapGet(enclosure, "shell");
+
+    rotate([0, 0, 180]) rotate([0, 180, 0]) translate([0, 0, 0.0]) children();
 }
 
 module enclosureFront(enclosure) {
@@ -125,7 +164,7 @@ module enclosureFront(enclosure) {
     depth = mapGet(enclosure, "depth");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) translate([0, height/2, depth/2-shell-0.01]) shellScale(enclosure) children();
+    rotate([90, 0, 0]) translate([0, 0, depth/2-shell-0.01]) children();
 }
 
 module enclosureBack(enclosure) {
@@ -133,7 +172,7 @@ module enclosureBack(enclosure) {
     depth = mapGet(enclosure, "depth");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, 180, 0]) translate([0, height/2, depth/2-shell-0.01]) shellScale(enclosure) children();
+    rotate([90, 0, 0]) rotate([0, 180, 0]) translate([0, 0, depth/2-shell-0.01]) children();
 }
 
 module enclosureRight(enclosure) {
@@ -141,7 +180,7 @@ module enclosureRight(enclosure) {
     width = mapGet(enclosure, "width");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, 90, 0]) translate([0, height/2, width/2-shell-0.01]) shellScale(enclosure) children();
+    rotate([90, 0, 0]) rotate([0, 90, 0]) translate([0, 0, width/2-shell-0.01]) children();
 }
 
 module enclosureLeft(enclosure) {
@@ -149,5 +188,10 @@ module enclosureLeft(enclosure) {
     width = mapGet(enclosure, "width");
     shell = mapGet(enclosure, "shell");
 
-    rotate([90, 0, 0]) rotate([0, -90, 0]) translate([0, height/2, width/2-shell-0.01]) shellScale(enclosure) children();
+    rotate([90, 0, 0]) rotate([0, -90, 0]) translate([0, 0, width/2-shell-0.01]) children();
+}
+
+module potentiometer() {
+    cylinder(d=7.4);
+    translate([-7.8, 0]) cylinder(d=2.9);
 }
