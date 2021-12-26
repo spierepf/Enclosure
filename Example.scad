@@ -3,15 +3,9 @@ $fn=64;
 
 // Load the main library
 use <Enclosure.scad>
-use <PCB.scad>
 
 // Start by describing the basic dimensions of your enclosure
 myEnclosure = enclosure([80.0, 40.0, 25.0]); // define an enclosure that is 80.0mm x 40.0mm x 25.0mm
-
-// This is our PCB
-myPCB = pcb([70.0, 30.0], 4.0);
-
-color("green", 0.1) pcb(myPCB);
 
 // Now lets render the enclosure cover:
 translate([0, 0, 10]) union() {
@@ -39,11 +33,9 @@ translate([0, 0, 10]) union() {
             }
         }
     }
-    coverStandoffs(myEnclosure, myPCB);
 }
 
 // Now lets render the snap on base:
 translate([0, 0, -10]) union() {
     enclosureBase(myEnclosure);
-    baseStandoffs(myEnclosure, myPCB);
 }

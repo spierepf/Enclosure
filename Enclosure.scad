@@ -1,5 +1,4 @@
 use <_MapStructure.scad>
-use <PCB.scad>
 
 function enclosure(size, shell=2.0, fillet=3.0, gap=0.1, nubWidth=-1, lipDepth=-1, lipHeight=-1) =
     [
@@ -105,38 +104,6 @@ module enclosureBase(enclosure) {
             rotate(0, [0, 0, 1]) translate([0, -depth/2+shell+gap, lipHeight/2]) nub(nubWidth, lipHeight/2, lipHeight);
             rotate(180, [0, 0, 1]) translate([0, -depth/2+shell+gap, lipHeight/2]) nub(nubWidth, lipHeight/2, lipHeight);
         }
-    }
-}
-
-module baseStandoffs(enclosure, pcb) {
-    pcbWidth = mapGet(pcb, "width");
-    pcbDepth = mapGet(pcb, "depth");
-    pcbElevation = mapGet(pcb, "elevation");
-
-    difference() {
-        union() {
-            translate([-(pcbWidth/2)+(-1.0), -(pcbDepth/2)+(-1.0), 0]) cube([3, 3, pcbElevation]);
-            translate([-(pcbWidth/2)+(-1.0),  (pcbDepth/2)+(-2.0), 0]) cube([3, 3, pcbElevation]);
-            translate([ (pcbWidth/2)+(-2.0),  (pcbDepth/2)+(-2.0), 0]) cube([3, 3, pcbElevation]);
-            translate([ (pcbWidth/2)+(-2.0), -(pcbDepth/2)+(-1.0), 0]) cube([3, 3, pcbElevation]);
-        }
-        pcb(pcb, [0.4, 0.4, 0.001]);
-    }
-}
-
-module coverStandoffs(enclosure, pcb) {
-    pcbWidth = mapGet(pcb, "width");
-    pcbDepth = mapGet(pcb, "depth");
-    pcbElevation = mapGet(pcb, "elevation");
-
-    height = mapGet(enclosure, "height");
-    shell = mapGet(enclosure, "shell");
-
-    union() {
-        translate([-(pcbWidth/2)+(-1.0), -(pcbDepth/2)+(-1.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
-        translate([-(pcbWidth/2)+(-1.0),  (pcbDepth/2)+(-2.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
-        translate([ (pcbWidth/2)+(-2.0),  (pcbDepth/2)+(-2.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
-        translate([ (pcbWidth/2)+(-2.0), -(pcbDepth/2)+(-1.0), pcbElevation]) cube([3, 3, height - shell - pcbElevation]);
     }
 }
 
